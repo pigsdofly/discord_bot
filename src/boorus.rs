@@ -25,13 +25,40 @@ pub mod boorus {
     }
 
     fn safebooru_link(tags: String) -> String {
-        let url = "https://safebooru.org/";
+        let url = "https://safebooru.org/index.php?page=";
         let pid: u8 = random();
-        let api_str = format!("{}index.php?page=dapi&s=post&q=index&tags={}&limit=1&pid={}", url, tags, pid);
+        let api_str = format!("{}dapi&s=post&q=index&tags={}&limit=1&pid={}", url, tags, pid);
         let res = transfer(api_str);
-        
+        let res : Vec<&str> = res.split(|c| c == ' ' || c == ',').collect();
+        let mut result = String::new();
+        for r in res {
+            let temp : Vec<&str> = r.split('=').collect();
+            if temp[0] == "id" {
+                let id = temp.get(1).expect("No value found").to_string();
+                let id_len = id.len();
+                
+                result = format!("{}post&s=view&id={}",url, &id[1..id_len-1]);
+            }
 
-        res
+        }
+        result
+
+        
+        /*let mut reader = Reader::from_str(res);
+        reader.trim_text(true);
+        
+        let mut buf = Vec::new();
+
+        loop {
+            match reader.read_event(&mut buf) {
+                Ok(Event::Text(e)) => {println!("{}",e.unescape_and_decode(&reader).unwrap())},
+                Ok(Event::Start(ref e)) => {
+                },
+                Ok(Event::Eof) => break,
+                Err(e) => panic!("Error: {:?}", e),
+                _ => (),
+            }
+        }*/
     }
 
     fn gelbooru_link(tags: String) -> String {
