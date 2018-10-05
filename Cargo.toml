@@ -7,3 +7,4 @@ authors = ["midori"]
 serenity = "0.5"
 curl="0.4.18"
 rand="0.5"
+quick-xml="0.12.0"

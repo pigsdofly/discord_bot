@@ -19,6 +19,7 @@ fn main() {
         .expect("Error creating client");
     client.with_framework(StandardFramework::new()
                             .configure(|c| c.prefix("~"))
+                            .cmd("help", help)
                             .cmd("ping",ping)
                             .cmd("slut",slut)
                             .cmd("emote", emote)
@@ -30,6 +31,14 @@ fn main() {
         println!("An error occured while running the client: {:?}", why);
     }
 }
+
+command!(help(_context, message) {
+    let _ = message.channel_id.say("Current list of commands:\n\t
+~emote/~emoji: Display URL for specified emoji\n\t
+~danbooru <tag>: Displays random image with specified tags from danbooru\n\t
+~safebooru <tag>: Displays random image with specified tags from safebooru");
+                    
+});
 
 command!(ping(_context, message) {
     let _ = message.reply("Pong!");
