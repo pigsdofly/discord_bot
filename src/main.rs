@@ -1,6 +1,6 @@
 #[macro_use] extern crate serenity;
 extern crate curl;
-extern crate serde_json;
+extern crate rand;
 
 mod boorus;
 

@@ -1,29 +1,46 @@
 pub mod boorus {
 
     use curl::easy::Easy;
-    use std::collections::HashMap;
     use std::str;
-
+    use rand::prelude::*;
 
     pub fn get_booru_link<'a>(booru: &'a str, content: String) -> String {
-        let booru_names : HashMap<&str, &str> = 
-            [("danbooru", "https://danbooru.donmai.us/posts"),
-             ("gelbooru", "gelbooru.com"),
-             ("safebooru", "safebooru.org")]
-                 .iter().cloned().collect();
-        
-        if !booru_names.contains_key(booru) {
-            let error_str = "Error";
-            &error_str;
-        }
-        
-        let name = booru_names[booru];
-        let mut handle = Easy::new();
-        let string_to_send = format!("{}.json?tags={}&random=true&limit=1",
-                                       name, content);
-        let string_to_send = string_to_send.as_str();
 
-        handle.url(string_to_send).unwrap();
+        match booru {
+            "danbooru" => danbooru_link(content),
+            "gelbooru" => gelbooru_link(content),
+            "safebooru" => safebooru_link(content),
+            _ => String::from("Error, incorrect input"),
+        }
+    }
+
+    fn danbooru_link(tags: String) -> String {
+        let url = "https://danbooru.donmai.us/posts";
+        let api_str = format!("{}.json?tags={}&random=true&limit=1",
+                                       url, tags);
+        let res = transfer(api_str);
+
+        let result : Vec<&str> = res.split(|c| c == ',' || c == ':').collect();             
+        format!("{}/{}", url,&result[1])
+    }
+
+    fn safebooru_link(tags: String) -> String {
+        let url = "https://safebooru.org/";
+        let pid: u8 = random();
+        let api_str = format!("{}index.php?page=dapi&s=post&q=index&tags={}&limit=1&pid={}", url, tags, pid);
+        let res = transfer(api_str);
+        
+
+        res
+    }
+
+    fn gelbooru_link(tags: String) -> String {
+        tags
+    }
+
+    fn transfer(url: String) -> String { 
+        let mut handle = Easy::new();
+        handle.url(url.as_str()).unwrap();
 
         let mut buf = Vec::new();
         
@@ -37,13 +54,7 @@ pub mod boorus {
             transfer.perform().unwrap();
         }
         
-        let res = String::from_utf8(buf).unwrap();
-        let result : Vec<&str> = res.split(|c| c == ',' || c == ':').collect();             
-        
-        let result = format!("{}/{}", name,&result[1]);
-
-        let content = result;
-        content
+        String::from_utf8(buf).unwrap()
     }
 
 }
