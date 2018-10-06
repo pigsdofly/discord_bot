@@ -38,9 +38,9 @@ fn main() {
 command!(help(_context, message) {
     let _ = message.channel_id.say("```Current list of commands:\n\t
 ~emote/~emoji: Display URL for specified emoji\n\t
-~danbooru <tag>: Displays random image with specified tags from danbooru\n\t
-~safebooru <tag>: Displays random image with specified tags from safebooru\n\t
-~safebooru <tag>: Displays random image with specified tags from safebooru\n\t
+~danbooru <tag> [<tag2>]: Displays random image with specified tags from danbooru\n\t
+~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
+~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
 ~bang: BANG BANG BANG PULL MY DEVIL TRIGGER\n\t
 ~weiss: posts a nice choco```");
                     
