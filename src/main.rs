@@ -21,6 +21,7 @@ fn main() {
                             .configure(|c| c.prefix("~"))
                             .cmd("help", help)
                             .cmd("weiss", weiss)
+                            .cmd("bang", bang)
                             .cmd("husbando",husbando)
                             .cmd("slut",slut)
                             .cmd("emote", emote)
@@ -39,6 +40,8 @@ command!(help(_context, message) {
 ~emote/~emoji: Display URL for specified emoji\n\t
 ~danbooru <tag>: Displays random image with specified tags from danbooru\n\t
 ~safebooru <tag>: Displays random image with specified tags from safebooru\n\t
+~safebooru <tag>: Displays random image with specified tags from safebooru\n\t
+~bang: BANG BANG BANG PULL MY DEVIL TRIGGER\n\t
 ~weiss: posts a nice choco```");
                     
 });
@@ -102,6 +105,11 @@ command!(weiss(_context, message) {
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
+});
+
+command!(bang(_context, message) {
+    let _ = message.channel_id.send_message(|m| m.content("BANG BANG BANG https://www.youtube.com/watch?v=iUVDHEGR31k"));
+    
 });
 
 command!(emote(_context, message, args) {
