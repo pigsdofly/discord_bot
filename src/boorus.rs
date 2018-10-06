@@ -3,6 +3,7 @@ pub mod boorus {
     use curl::easy::Easy;
     use std::str;
     use rand::prelude::*;
+    use serenity::framework::standard::Args;
 
     pub fn get_booru_link<'a>(booru: &'a str, content: String) -> String {
 
@@ -12,6 +13,20 @@ pub mod boorus {
             "safebooru" => safebooru_link(content),
             _ => String::from("Error, incorrect input"),
         }
+    }
+
+    pub fn parse_args(mut args: Args) -> Option<String> {
+        let mut tags = Vec::new();
+        for arg in args.iter::<String>() {
+            tags.push(arg.unwrap());
+        }
+        
+        match tags.len() {
+            1 => Some(tags[0].clone()),
+            2 => Some(format!("{}+{}",tags[0].clone(), tags[1].clone())),
+            _ => None,
+        }
+
     }
 
     fn danbooru_link(tags: String) -> String {
@@ -42,23 +57,6 @@ pub mod boorus {
 
         }
         result
-
-        
-        /*let mut reader = Reader::from_str(res);
-        reader.trim_text(true);
-        
-        let mut buf = Vec::new();
-
-        loop {
-            match reader.read_event(&mut buf) {
-                Ok(Event::Text(e)) => {println!("{}",e.unescape_and_decode(&reader).unwrap())},
-                Ok(Event::Start(ref e)) => {
-                },
-                Ok(Event::Eof) => break,
-                Err(e) => panic!("Error: {:?}", e),
-                _ => (),
-            }
-        }*/
     }
 
     fn gelbooru_link(tags: String) -> String {
