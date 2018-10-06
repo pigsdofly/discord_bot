@@ -61,6 +61,7 @@ pub mod boorus {
             }
 
         }
+        image_url = format!("https:{}",image_url);
         (result, image_url)
     }
 
