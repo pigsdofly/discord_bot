@@ -61,7 +61,8 @@ pub mod boorus {
             }
 
         }
-        image_url = format!("https:{}",image_url);
+        let image_url = &image_url[1..image_url.len()-1];
+        let image_url = format!("https:{}",image_url);
         (result, image_url)
     }
 

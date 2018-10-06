@@ -74,7 +74,6 @@ command!(safebooru(_context, message, args) {
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
-    let url = &url[1..url.len()-1];
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
