@@ -26,7 +26,8 @@ fn main() {
                             .cmd("emote", emote)
                             .cmd("emoji", emote)
                             .cmd("safebooru",safebooru)
-                            .cmd("danbooru",danbooru));
+                            .cmd("danbooru",danbooru)
+                            .cmd("gelbooru", gelbooru));
                             
     if let Err(why) = client.start() {
         println!("An error occured while running the client: {:?}", why);
@@ -54,25 +55,53 @@ command!(danbooru(_context, message, args) {
 
     let tag = boorus::boorus::parse_args(args);
 
-    let _ = match tag {
-        Some(t) => message.channel_id.say((boorus::boorus::get_booru_link("danbooru", t)).as_str()),
-        None => message.channel_id.say("Invalid amount of tags, only 1-2 can be used"),
+    let (link, _url) = match tag {
+        Some(t) => boorus::boorus::get_booru_link("danbooru", t),
+        None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
+
+    let _ = message.channel_id.say(link);
 });
 
 command!(safebooru(_context, message, args) {
     let tag = boorus::boorus::parse_args(args);
     
-    let _ = match tag {
-        Some(t) => message.channel_id.say((boorus::boorus::get_booru_link("safebooru", t)).as_str()),
-        None => message.channel_id.say("Invalid amount of tags, only 1-2 can be used"),
+    let (link, url) = match tag {
+        Some(t) => boorus::boorus::get_booru_link("safebooru", t),
+        None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
+
+    let url = &url[1..url.len()-1];
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
+
+});
+
+command!(gelbooru(_context, message, args) {
+    let tag = boorus::boorus::parse_args(args);
+    
+    let (link, url) = match tag {
+        Some(t) => boorus::boorus::get_booru_link("gelbooru", t),
+        None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
+    };
+
+    let url = &url[1..url.len()-1];
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
 
 });
 
 command!(weiss(_context, message) {
-    let tag = String::from("dark_skin+white_hair");
-    let _ = message.channel_id.say((boorus::boorus::get_booru_link("danbooru", tag)).as_str());
+    let tag = String::from("dark_skin+white_hair+-furry+-male_focus");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru", tag);
+
+    println!("{}, {}", link, url);
+    let url = &url[1..url.len()-1];
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
 });
 
 command!(emote(_context, message, args) {
