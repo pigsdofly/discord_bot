@@ -99,7 +99,6 @@ command!(weiss(_context, message) {
     let tag = String::from("dark_skin+white_hair+-furry+-male_focus");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru", tag);
 
-    println!("{}, {}", link, url);
     let url = &url[1..url.len()-1];
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
@@ -116,14 +115,18 @@ command!(emote(_context, message, args) {
     let emoji_name = String::from(&emoji_name[2..emoji_name.len()-1]);
     let split_emoji : Vec<&str> = emoji_name.split(":").collect();
 
+    let (emoji_id, filetype) = match split_emoji.len() {
+        2 => (split_emoji[1], "png"),
+        3 => (split_emoji[2], "gif"),
+        _ => ("Bad input", ""),
+    };
+
     if split_emoji.len() < 2 {
         let _ = message.channel_id.say("Bad input");
     } else {
 
-        let emoji_id = split_emoji[1];
-
-        let url = format!("https://cdn.discordapp.com/emojis/{}.png", emoji_id);
-        let _ = message.channel_id.say(url);
+        let url = format!("https://cdn.discordapp.com/emojis/{}.{}", emoji_id, filetype);
+        let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
     }
 
 });
