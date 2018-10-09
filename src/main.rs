@@ -56,14 +56,18 @@ command!(slut(_context, message) {
 
 command!(danbooru(_context, message, args) {
 
-    let tag = boorus::boorus::parse_args(args);
+    if boorus::boorus::check_censored(&args) == false {
+        let _ = message.channel_id.say("Sorry, you used a tag censored on danbooru, try ~gelbooru instead");
+    } else {
+        let tag = boorus::boorus::parse_args(args);
 
-    let (link, _url) = match tag {
-        Some(t) => boorus::boorus::get_booru_link("danbooru", t),
-        None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
-    };
+        let (link, _url) = match tag {
+            Some(t) => boorus::boorus::get_booru_link("danbooru", t),
+            None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
+        };
 
-    let _ = message.channel_id.say(link);
+        let _ = message.channel_id.say(link);
+    }
 });
 
 command!(safebooru(_context, message, args) {

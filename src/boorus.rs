@@ -15,9 +15,23 @@ pub mod boorus {
         }
     }
 
+    pub fn check_censored(args: &Args) -> bool {
+
+        let bad_words = vec!["loli", "shota", "toddlercon"];
+
+        for word in bad_words {
+            if args.contains(word) {
+                return true
+            }
+        }
+         
+        false
+    }
+
     pub fn parse_args(mut args: Args) -> Option<String> {
         let mut tags = Vec::new();
         for arg in args.iter::<String>() {
+            
             tags.push(arg.unwrap());
         }
         
@@ -35,7 +49,8 @@ pub mod boorus {
                                        url, tags);
         let res = transfer(api_str);
 
-        let result : Vec<&str> = res.split(|c| c == ',' || c == ':').collect();             
+        let result : Vec<&str> = res.split(|c| c == ',' || c == ':').collect();
+
         (format!("{}/{}", url,&result[1]), String::new())
     }
 
@@ -110,4 +125,13 @@ pub mod boorus {
         String::from_utf8(buf).unwrap()
     }
 
+}
+
+#[cfg(test)]
+mod tests {
+    
+  /*  #[test]
+    fn test_censored() {
+        println!(
+    }*/
 }
