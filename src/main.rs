@@ -70,13 +70,15 @@ command!(safebooru(_context, message, args) {
     let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
-        Some(t) => boorus::boorus::get_booru_link("safebooru", t),
+        Some(t) => boorus::boorus::get_booru_link("safebooru.org", t),
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
+    let url = format!("https:{}",url);
+    println!("{}", url);
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
-                       .image(&url)));
+                       .image(url)));
 
 });
 
@@ -84,11 +86,10 @@ command!(gelbooru(_context, message, args) {
     let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
-        Some(t) => boorus::boorus::get_booru_link("gelbooru", t),
+        Some(t) => boorus::boorus::get_booru_link("gelbooru.com", t),
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
-    let url = &url[1..url.len()-1];
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
@@ -99,7 +100,6 @@ command!(weiss(_context, message) {
     let tag = String::from("dark_skin+white_hair+-furry+-male_focus");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru", tag);
 
-    let url = &url[1..url.len()-1];
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));

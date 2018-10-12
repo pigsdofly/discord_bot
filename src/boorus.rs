@@ -9,8 +9,8 @@ pub mod boorus {
 
         match booru {
             "danbooru" => danbooru_link(content),
-            "gelbooru" => gelbooru_link(content),
-            "safebooru" => safebooru_link(content),
+            "gelbooru.com" => gelbooru_link(content, booru),
+            "safebooru.org" => gelbooru_link(content, booru),
             _ => (String::from("Error, incorrect input"), String::new()),
         }
     }
@@ -49,35 +49,9 @@ pub mod boorus {
         (format!("{}/{}", url,&result[1]), String::new())
     }
 
-    fn safebooru_link(tags: String) -> (String, String) {
-        let url = "https://safebooru.org/index.php?page=";
-        let pid: u8 = random();
-        let api_str = format!("{}dapi&s=post&q=index&tags={}&limit=1&pid={}", url, tags, pid);
-        let res = transfer(api_str);
-        let res : Vec<&str> = res.split(|c| c == ' ' || c == ',').collect();
-        let mut result = String::new();
-        let mut image_url = String::new();
-        for r in res {
-            let temp : Vec<&str> = r.split('=').collect();
-            if temp[0] == "file_url" {
-                image_url = temp.get(1).expect("No value found").to_string();
-
-            }
-            if temp[0] == "id" {
-                let id = temp.get(1).expect("No value found").to_string();
-                let id_len = id.len();
-                
-                result = format!("{}post&s=view&id={}",url, &id[1..id_len-1]);
-            }
-
-        }
-        let image_url = &image_url[1..image_url.len()-1];
-        let image_url = format!("https:{}",image_url);
-        (result, image_url)
-    }
-
-    fn gelbooru_link(tags: String) -> (String, String) {
-        let url = "https://gelbooru.com/index.php?page=";
+    fn gelbooru_link(tags: String, booru: &str) -> (String, String) {
+        println!("{}",booru);
+        let url = format!("https://{}/index.php?page=", booru);
         let api_str = format!("{}dapi&s=post&q=index&tags={}&limit=500", url, tags);
         let res = transfer(api_str);
         let res : Vec<&str> = res.split(|c| c == ' ' || c == ',').collect();
@@ -108,9 +82,12 @@ pub mod boorus {
         }
         let id: usize = rng.gen_range(0,image_urls.len()-1);
 
-        let url = format!("{}post&s=view&id={}", url, &ids[id]);
+        let url = format!("{}post&s=view&id={}", &url, &ids[id]);
+        let return_image = image_urls[id].clone();
+        let return_image = return_image[1..return_image.len()-1].to_string();
+        println!("{}, {}", url, return_image);
        
-        (url, image_urls[id].clone())
+        (url, return_image)
     }
 
     fn transfer(url: String) -> String { 
