@@ -7,3 +7,6 @@ authors = ["midori"]
 serenity = "0.5"
 curl="0.4.18"
 rand="0.5"
+
+[patch.crates-io]
+openssl = { git = "https://github.com/ishitatsuyuki/rust-openssl", branch = "0.9.x" }

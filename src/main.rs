@@ -56,7 +56,7 @@ command!(slut(_context, message) {
 
 command!(danbooru(_context, message, args) {
 
-    let tag = boorus::boorus::parse_args(args);
+    let tag = boorus::boorus::parse_args(args, 2);
 
     let (link, _url) = match tag {
         Some(t) => boorus::boorus::get_booru_link("danbooru", t),
@@ -67,7 +67,7 @@ command!(danbooru(_context, message, args) {
 });
 
 command!(safebooru(_context, message, args) {
-    let tag = boorus::boorus::parse_args(args);
+    let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
         Some(t) => boorus::boorus::get_booru_link("safebooru", t),
@@ -81,7 +81,7 @@ command!(safebooru(_context, message, args) {
 });
 
 command!(gelbooru(_context, message, args) {
-    let tag = boorus::boorus::parse_args(args);
+    let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
         Some(t) => boorus::boorus::get_booru_link("gelbooru", t),
