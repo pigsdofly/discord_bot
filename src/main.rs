@@ -75,7 +75,6 @@ command!(safebooru(_context, message, args) {
     };
 
     let url = format!("https:{}",url);
-    println!("{}", url);
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
                        .image(url)));

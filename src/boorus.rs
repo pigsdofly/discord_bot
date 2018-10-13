@@ -50,7 +50,6 @@ pub mod boorus {
     }
 
     fn gelbooru_link(tags: String, booru: &str) -> (String, String) {
-        println!("{}",booru);
         let url = format!("https://{}/index.php?page=", booru);
         let api_str = format!("{}dapi&s=post&q=index&tags={}&limit=500", url, tags);
         let res = transfer(api_str);
@@ -85,7 +84,6 @@ pub mod boorus {
         let url = format!("{}post&s=view&id={}", &url, &ids[id]);
         let return_image = image_urls[id].clone();
         let return_image = return_image[1..return_image.len()-1].to_string();
-        println!("{}, {}", url, return_image);
        
         (url, return_image)
     }
