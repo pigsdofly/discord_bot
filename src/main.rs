@@ -97,8 +97,8 @@ command!(gelbooru(_context, message, args) {
 });
 
 command!(weiss(_context, message) {
-    let tag = String::from("dark_skin+white_hair+-furry+-male_focus");
-    let (link, url) = boorus::boorus::get_booru_link("gelbooru", tag);
+    let tag = String::from("dark_skin+white_hair+-comic+-furry+-male_focus");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
 
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e

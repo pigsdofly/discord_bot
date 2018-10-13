@@ -23,7 +23,7 @@ pub mod boorus {
         
         match tags.len() {
             1 => Some(tags[0].clone()),
-            x if x < lim => {
+            x if x <= lim => {
                 let mut argstr = String::new();
                 for tag in tags {
                     if argstr == "" {
