@@ -26,6 +26,8 @@ fn main() {
                             .cmd("slut",slut)
                             .cmd("emote", emote)
                             .cmd("emoji", emote)
+                            .cmd("bigsmug", bigsmug)
+                            .cmd("chocola2", chocola2)
                             .cmd("safebooru",safebooru)
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
@@ -38,6 +40,8 @@ fn main() {
 command!(help(_context, message) {
     let _ = message.channel_id.say("```Current list of commands:\n\t
 ~emote/~emoji: Display URL for specified emoji\n\t
+~bigsmug: BIG SACH\n\t
+~chocola2: BIG CHOCOLA\n\t
 ~danbooru <tag> [<tag2>]: Displays random image with specified tags from danbooru\n\t
 ~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
 ~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
@@ -129,3 +133,15 @@ command!(emote(_context, message, args) {
     }
 
 });
+
+command!(bigsmug(_context, message) {
+    let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318574343094273/extremelybigsmug4.png";
+    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
+    
+});
+
+command!(chocola2(_context, message) {
+    let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318130522685470/extremelybigchocola2.png";
+    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
+});
+
