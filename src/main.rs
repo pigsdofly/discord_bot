@@ -21,6 +21,7 @@ fn main() {
                             .configure(|c| c.prefix("~"))
                             .cmd("help", help)
                             .cmd("weiss", weiss)
+                            .cmd("weiss2", weiss2)
                             .cmd("bang", bang)
                             .cmd("husbando",husbando)
                             .cmd("slut",slut)
@@ -46,7 +47,8 @@ command!(help(_context, message) {
 ~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
 ~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
 ~bang: BANG BANG BANG PULL MY DEVIL TRIGGER\n\t
-~weiss: posts a nice choco```");
+~weiss: posts a nice choco
+~weiss2: footfags smh```");
                     
 });
 
@@ -100,7 +102,16 @@ command!(gelbooru(_context, message, args) {
 });
 
 command!(weiss(_context, message) {
-    let tag = String::from("dark_skin+white_hair+-comic+-furry+-male_focus");
+    let tag = String::from("dark_skin+white_hair+-comic+-guro+-furry+-dark_skinned_male+-male_focus");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
+
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
+});
+
+command!(weiss2(_context, message) {
+    let tag = String::from("dark_skin+soles+feet+-comic+-guro+-dark_skinned_male+-furry+-male_focus");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
 
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
