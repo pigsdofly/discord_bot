@@ -22,6 +22,7 @@ fn main() {
                             .cmd("help", help)
                             .cmd("weiss", weiss)
                             .cmd("weiss2", weiss2)
+                            .cmd("midori", midori)
                             .cmd("bang", bang)
                             .cmd("husbando",husbando)
                             .cmd("slut",slut)
@@ -118,6 +119,16 @@ command!(weiss2(_context, message) {
                 .embed(|e| e
                        .image(&url)));
 });
+
+command!(midori(_context, message) {
+    let tag = String::from("miko+armpits+arms_up+-comic+-furry+-male_focus");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
+
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
+});
+
 
 command!(bang(_context, message) {
     let _ = message.channel_id.send_message(|m| m.content("BANG BANG BANG https://www.youtube.com/watch?v=iUVDHEGR31k"));
