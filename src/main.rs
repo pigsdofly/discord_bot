@@ -31,6 +31,7 @@ fn main() {
                             .cmd("bigsmug", bigsmug)
                             .cmd("chocola2", chocola2)
                             .cmd("vanilla2", vanilla2)
+                            .cmd("mikasweat", mikasweat)
                             .cmd("safebooru",safebooru)
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
@@ -171,5 +172,10 @@ command!(chocola2(_context, message) {
 
 command!(vanilla2(_context, message) {
     let url = "https://media.discordapp.net/attachments/123165694429888514/556235851747819522/extremelybigvanilla2.png";
+    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
+});
+
+command!(mikasweat(_context, message) {
+    let url = "https://cdn.discordapp.com/attachments/123165694429888514/542484609967980565/DisOUS0UwAALPh-.png";
     let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
 });
