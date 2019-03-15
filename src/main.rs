@@ -30,6 +30,7 @@ fn main() {
                             .cmd("emoji", emote)
                             .cmd("bigsmug", bigsmug)
                             .cmd("chocola2", chocola2)
+                            .cmd("vanilla2", vanilla2)
                             .cmd("safebooru",safebooru)
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
@@ -162,8 +163,13 @@ command!(bigsmug(_context, message) {
     
 });
 
+
 command!(chocola2(_context, message) {
     let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318130522685470/extremelybigchocola2.png";
     let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
 });
 
+command!(vanilla2(_context, message) {
+    let url = "https://media.discordapp.net/attachments/123165694429888514/556235851747819522/extremelybigvanilla2.png";
+    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
+});
