@@ -23,6 +23,7 @@ fn main() {
                             .cmd("weiss", weiss)
                             .cmd("weiss2", weiss2)
                             .cmd("midori", midori)
+                            .cmd("eve", eve)
                             .cmd("bang", bang)
                             .cmd("husbando",husbando)
                             .cmd("slut",slut)
