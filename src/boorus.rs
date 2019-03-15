@@ -5,12 +5,12 @@ pub mod boorus {
     use rand::prelude::*;
     use serenity::framework::standard::Args;
 
-    pub fn get_booru_link(booru: &str, content: String) -> (String, String) {
+    pub fn get_booru_link(booru: &str, content: String, limit: i32) -> (String, String) {
 
         match booru {
             "danbooru" => danbooru_link(content),
-            "gelbooru.com" => gelbooru_link(content, booru),
-            "safebooru.org" => gelbooru_link(content, booru),
+            "gelbooru.com" => gelbooru_link(content, booru, limit),
+            "safebooru.org" => gelbooru_link(content, booru, limit),
             _ => (String::from("Error, incorrect input"), String::new()),
         }
     }
@@ -49,9 +49,9 @@ pub mod boorus {
         (format!("{}/{}", url,&result[1]), String::new())
     }
 
-    fn gelbooru_link(tags: String, booru: &str) -> (String, String) {
+    fn gelbooru_link(tags: String, booru: &str, limit: i32) -> (String, String) {
         let url = format!("https://{}/index.php?page=", booru);
-        let api_str = format!("{}dapi&s=post&q=index&tags={}&limit=500", url, tags);
+        let api_str = format!("{}dapi&s=post&q=index&tags={}&limit={}", url, tags, limit);
         let res = transfer(api_str);
         let res : Vec<&str> = res.split(|c| c == ' ' || c == ',').collect();
         let mut image_urls = Vec::new();

@@ -68,7 +68,7 @@ command!(danbooru(_context, message, args) {
     let tag = boorus::boorus::parse_args(args, 2);
 
     let (link, _url) = match tag {
-        Some(t) => boorus::boorus::get_booru_link("danbooru", t),
+        Some(t) => boorus::boorus::get_booru_link("danbooru", t, 500),
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
@@ -79,7 +79,7 @@ command!(safebooru(_context, message, args) {
     let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
-        Some(t) => boorus::boorus::get_booru_link("safebooru.org", t),
+        Some(t) => boorus::boorus::get_booru_link("safebooru.org", t, 500),
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
@@ -94,7 +94,7 @@ command!(gelbooru(_context, message, args) {
     let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
-        Some(t) => boorus::boorus::get_booru_link("gelbooru.com", t),
+        Some(t) => boorus::boorus::get_booru_link("gelbooru.com", t, 500),
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
@@ -106,7 +106,7 @@ command!(gelbooru(_context, message, args) {
 
 command!(weiss(_context, message) {
     let tag = String::from("dark_skin+white_hair+-comic+-guro+-furry+-dark_skinned_male+-male_focus");
-    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
@@ -115,7 +115,7 @@ command!(weiss(_context, message) {
 
 command!(weiss2(_context, message) {
     let tag = String::from("dark_skin+soles+feet+-comic+-guro+-dark_skinned_male+-furry+-male_focus");
-    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
@@ -124,13 +124,21 @@ command!(weiss2(_context, message) {
 
 command!(midori(_context, message) {
     let tag = String::from("miko+armpits+arms_up+-comic+-furry+-male_focus");
-    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag);
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
 });
 
+command!(eve(_context, message) {
+    let tag = String::from("makoto_nanaya");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 5);
+
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
+});
 
 command!(bang(_context, message) {
     let _ = message.channel_id.send_message(|m| m.content("BANG BANG BANG https://www.youtube.com/watch?v=iUVDHEGR31k"));
