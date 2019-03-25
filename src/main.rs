@@ -3,6 +3,7 @@ extern crate curl;
 extern crate rand;
 
 mod boorus;
+mod sadpanda;
 
 use serenity::client::Client;
 use serenity::prelude::EventHandler;
@@ -166,7 +167,11 @@ command!(emote(_context, message, args) {
     }
 
 });
-
+command!(tags(_context, message, args) {
+    let url = args.single::<String>().unwrap();
+    let (image_url, doujin_tags) = sadpanda::sadpanda::retrieve_tags(url);
+    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&image_url)));
+});
 command!(bigsmug(_context, message) {
     let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318574343094273/extremelybigsmug4.png";
     let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
