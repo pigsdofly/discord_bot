@@ -36,6 +36,7 @@ fn main() {
                             .cmd("chocola2", chocola2)
                             .cmd("vanilla2", vanilla2)
                             .cmd("mikasweat", mikasweat)
+                            .cmd("tags", tags)
                             .cmd("safebooru",safebooru)
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
@@ -172,6 +173,8 @@ command!(emote(_context, message, args) {
 command!(tags(_context, message, args) {
     let url = args.single::<String>().unwrap();
     let (doujin_title, image_url, doujin_tags) = sadpanda::sadpanda::retrieve_tags(url);
+    
+    
     let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&image_url)));
 });
 command!(bigsmug(_context, message) {
