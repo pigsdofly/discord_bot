@@ -60,7 +60,7 @@ pub mod sadpanda {
         };*/
         
         let mut result = res.text().unwrap();
-        
+        result        
     }
     
     #[cfg(test)]
