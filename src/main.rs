@@ -48,15 +48,23 @@ fn main() {
 
 command!(help(_context, message) {
     let _ = message.channel_id.say("```Current list of commands:\n\t
-~emote/~emoji: Display URL for specified emoji\n\t
+~emote/~emoji: Display embed image for specified emoji\n\t
+~tags: displays embed information for a sadpanda link\n\t
 ~bigsmug: BIG SACH\n\t
 ~chocola2: BIG CHOCOLA\n\t
+~vanilla2: BIG VANILLA\n\t
+~mikasweat: :mikasweat:\n\t
+
 ~danbooru <tag> [<tag2>]: Displays random image with specified tags from danbooru\n\t
 ~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
 ~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
+
 ~bang: BANG BANG BANG PULL MY DEVIL TRIGGER\n\t
-~weiss: posts a nice choco
-~weiss2: footfags smh```");
+
+~weiss: posts a nice choco\n\t
+~weiss2: footfags smh\n\t
+~eve: posts a recent image of makoto nanaya\n\t
+~midori: posts miko pits\n\t```");
                     
 });
 
