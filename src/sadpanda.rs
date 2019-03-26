@@ -5,17 +5,24 @@ pub mod sadpanda {
     use curl::easy::Easy;
     use std::collections::HashMap;
     use reqwest::header::{HeaderMap, HeaderValue, CONTENT_TYPE};
-    //use serde_json::{Result, Value};
+    use serde_json::{Value};
     
     
     // Returns image url and tags
-    pub fn retrieve_tags(url: String) -> (String, Vec<String>) {
+    pub fn retrieve_tags(url: String) -> (String, String, Vec<String>) {
         let (g_id, g_tok) = split_url(url);
         let js_string = make_json(g_id,g_tok);
-        let mut v = Vec::new();
+        let result = clean_post(js_string).unwrap();
+        let title = result["gmetadata"][0]["title"].to_string().clone();
+        let thumbnail = result["gmetadata"][0]["thumb"].to_string().clone();
+        let tags_raw = result["gmetadata"][0]["tags"].as_array().unwrap();
+        let mut tags : Vec<String> = Vec::new();
         
-        v.push(String::from("a"));
-        (String::from(""),v)
+        for t in tags_raw {
+            tags.push(t.to_string());
+        }
+        
+        (title, thumbnail, tags)
     }
     
     //Get the id and token from the URL
@@ -41,7 +48,7 @@ pub mod sadpanda {
         format!("{}", request.to_string())
     }
     
-    fn post(data: String) -> Result<reqwest::Response,reqwest::Error> {
+    fn post(data: String) -> Result<reqwest::Response, reqwest::Error> {
         let mut head = HeaderMap::new();
         head.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
     
@@ -52,15 +59,17 @@ pub mod sadpanda {
         Ok(res?)
     }
     
-    fn clean_post(data: String) -> String {
+    
+    fn clean_post(data: String) -> Result<serde_json::Value, serde_json::Error> {
         let mut res = post(data).unwrap();
         /*let mut r = match(res) {
             Err(e) => return Err(e),
             Ok(r) => r,
         };*/
+        let result : Value = serde_json::from_str(&res.text().unwrap())?;
         
-        let mut result = res.text().unwrap();
-        result        
+        println!("{:#?}", result["gmetadata"][0]["thumb"]);
+        Ok(result)
     }
     
     #[cfg(test)]
@@ -80,13 +89,21 @@ pub mod sadpanda {
         
         #[test]
         fn posted() {
-            assert_eq!(clean_post(String::from(r#"{
+            
+            assert!(clean_post(String::from(r#"{
   "method": "gdata",
   "gidlist": [
       [618395,"0439fa3666"]
   ],
   "namespace": 1
-}"#)), String::from(""));
+}"#)).is_err(),"error");
+        }
+        
+        #[test]
+        fn tags() {
+            assert_eq!(retrieve_tags(String::from("https://e-hentai.org/g/618395/0439fa3666/")),(String::from("(Kouroumu 8) [Handful☆Happiness! (Fuyuki Nanahara)] TOUHOU GUNMANIA A2 (Touhou Project)"),
+            String::from("https://ehgt.org/14/63/1463dfbc16847c9ebef92c46a90e21ca881b2a12-1729712-4271-6032-jpg_l.jpg"), 
+            vec![String::from("")]));
         }
     }
 }
