@@ -1,4 +1,5 @@
 #[macro_use] extern crate serenity;
+#[macro_use] extern crate serde_json;
 extern crate curl;
 extern crate rand;
 
