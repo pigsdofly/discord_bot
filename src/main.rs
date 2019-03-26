@@ -1,8 +1,11 @@
 #[macro_use] extern crate serenity;
+#[macro_use] extern crate serde_json;
+extern crate reqwest;
 extern crate curl;
 extern crate rand;
 
 mod boorus;
+mod sadpanda;
 
 use serenity::client::Client;
 use serenity::prelude::EventHandler;
@@ -33,6 +36,7 @@ fn main() {
                             .cmd("chocola2", chocola2)
                             .cmd("vanilla2", vanilla2)
                             .cmd("mikasweat", mikasweat)
+                            .cmd("tags", tags)
                             .cmd("safebooru",safebooru)
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
@@ -44,15 +48,23 @@ fn main() {
 
 command!(help(_context, message) {
     let _ = message.channel_id.say("```Current list of commands:\n\t
-~emote/~emoji: Display URL for specified emoji\n\t
+~emote/~emoji: Display embed image for specified emoji\n\t
+~tags: displays embed information for a sadpanda link\n\t
 ~bigsmug: BIG SACH\n\t
 ~chocola2: BIG CHOCOLA\n\t
+~vanilla2: BIG VANILLA\n\t
+~mikasweat: :mikasweat:\n\t
+
 ~danbooru <tag> [<tag2>]: Displays random image with specified tags from danbooru\n\t
 ~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
 ~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
+
 ~bang: BANG BANG BANG PULL MY DEVIL TRIGGER\n\t
-~weiss: posts a nice choco
-~weiss2: footfags smh```");
+
+~weiss: posts a nice choco\n\t
+~weiss2: footfags smh\n\t
+~eve: posts a recent image of makoto nanaya\n\t
+~midori: posts miko pits\n\t```");
                     
 });
 
@@ -165,6 +177,14 @@ command!(emote(_context, message, args) {
         let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
     }
 
+});
+command!(tags(_context, message, args) {
+    let url = args.single::<String>().unwrap();
+    let (doujin_title, image_url, doujin_tags) = sadpanda::sadpanda::retrieve_tags(url);    
+    let doujin_title = String::from(&doujin_title[1..doujin_title.len()-1]);
+    let image_url = String::from(&image_url[1..image_url.len()-1]);
+    let _ = message.channel_id.send_message(|m| m.content(doujin_title)
+                                                .embed(|e| e.image(&image_url).description(doujin_tags)));
 });
 
 command!(bigsmug(_context, message) {
