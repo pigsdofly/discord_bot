@@ -9,17 +9,24 @@ pub mod sadpanda {
     
     
     // Returns image url and tags
-    pub fn retrieve_tags(url: String) -> (String, String, Vec<String>) {
+    pub fn retrieve_tags(url: String) -> (String, String, String) {
         let (g_id, g_tok) = split_url(url);
         let js_string = make_json(g_id,g_tok);
         let result = clean_post(js_string).unwrap();
         let title = result["gmetadata"][0]["title"].to_string().clone();
         let thumbnail = result["gmetadata"][0]["thumb"].to_string().clone();
         let tags_raw = result["gmetadata"][0]["tags"].as_array().unwrap();
-        let mut tags : Vec<String> = Vec::new();
-        
+        let mut tags : String = String::new();
+        let mut i = 0;
         for t in tags_raw {
-            tags.push(t.to_string());
+            let mut t = t.to_string();
+            if i == 0 {
+                t = format!("{}", String::from(&t[1..t.len()-1]));
+            } else {
+                t = format!(", {}", String::from(&t[1..t.len()-1]));
+            }
+            tags.push_str(&t);
+            i += 1;
         }
         
         (title, thumbnail, tags)
@@ -44,7 +51,6 @@ pub mod sadpanda {
             ],
             "namespace": 1
         });
-        println!("{}", request.to_string());
         format!("{}", request.to_string())
     }
     
@@ -68,7 +74,6 @@ pub mod sadpanda {
         };*/
         let result : Value = serde_json::from_str(&res.text().unwrap())?;
         
-        println!("{:#?}", result["gmetadata"][0]["thumb"]);
         Ok(result)
     }
     

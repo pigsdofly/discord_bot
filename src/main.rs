@@ -172,11 +172,13 @@ command!(emote(_context, message, args) {
 });
 command!(tags(_context, message, args) {
     let url = args.single::<String>().unwrap();
-    let (doujin_title, image_url, doujin_tags) = sadpanda::sadpanda::retrieve_tags(url);
-    
-    
-    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&image_url)));
+    let (doujin_title, image_url, doujin_tags) = sadpanda::sadpanda::retrieve_tags(url);    
+    let doujin_title = String::from(&doujin_title[1..doujin_title.len()-1]);
+    let image_url = String::from(&image_url[1..image_url.len()-1]);
+    let _ = message.channel_id.send_message(|m| m.content(doujin_title)
+                                                .embed(|e| e.image(&image_url).description(doujin_tags)));
 });
+
 command!(bigsmug(_context, message) {
     let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318574343094273/extremelybigsmug4.png";
     let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
