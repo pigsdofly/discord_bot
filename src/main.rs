@@ -27,6 +27,8 @@ fn main() {
                             .cmd("weiss2", weiss2)
                             .cmd("midori", midori)
                             .cmd("eve", eve)
+                            .cmd("saiyn", saiyn)
+                            .cmd("bog", bog)
                             .cmd("bang", bang)
                             .cmd("husbando",husbando)
                             .cmd("slut",slut)
@@ -50,21 +52,21 @@ command!(help(_context, message) {
     let _ = message.channel_id.say("```Current list of commands:\n\t
 ~emote/~emoji: Display embed image for specified emoji\n\t
 ~tags: displays embed information for a sadpanda link\n\t
+
+Meme commands:\n\t
 ~bigsmug: BIG SACH\n\t
 ~chocola2: BIG CHOCOLA\n\t
 ~vanilla2: BIG VANILLA\n\t
 ~mikasweat: :mikasweat:\n\t
-
-~danbooru <tag> [<tag2>]: Displays random image with specified tags from danbooru\n\t
-~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
-~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
-
 ~bang: BANG BANG BANG PULL MY DEVIL TRIGGER\n\t
 
-~weiss: posts a nice choco\n\t
-~weiss2: footfags smh\n\t
-~eve: posts a recent image of makoto nanaya\n\t
-~midori: posts miko pits\n\t```");
+Booru commands (WARNING NSFW):\n\t
+~safebooru <tag> [<tag2>]: Displays random image with specified tags from safebooru\n\t
+~danbooru <tag> [<tag2>]: Displays random image with specified tags from danbooru\n\t
+~gelbooru <tag> [<tag2>]: Displays random image with specified tags from gelbooru\n\t
+
+
+\n\t```");
                     
 });
 
@@ -147,6 +149,26 @@ command!(midori(_context, message) {
 command!(eve(_context, message) {
     let tag = String::from("makoto_nanaya");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 5);
+
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
+});
+
+
+command!(saiyn(_context, message) {
+    let tag = String::from("loli+tan");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
+
+    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+                .embed(|e| e
+                       .image(&url)));
+});
+
+   
+command!(bog(_context, message) {
+    let tag = String::from("loli+smug");
+    let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
     let _ = message.channel_id.send_message(|m| m.content(link.as_str())
                 .embed(|e| e
