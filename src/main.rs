@@ -30,8 +30,6 @@ fn main() {
                             .cmd("saiyn", saiyn)
                             .cmd("bog", bog)
                             .cmd("bang", bang)
-                            .cmd("husbando",husbando)
-                            .cmd("slut",slut)
                             .cmd("emote", emote)
                             .cmd("emoji", emote)
                             .cmd("bigsmug", bigsmug)
