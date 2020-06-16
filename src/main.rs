@@ -14,7 +14,12 @@ use std::env;
 
 struct Handler;
 
-impl EventHandler for Handler {}
+impl EventHandler for Handler {
+    fn ready(&self, ctx: Context, _: Ready) {
+        ctx.edit_profile(|e| e.username("Mayumi"));
+        
+    }
+}
 
 fn main() {
 
@@ -40,7 +45,9 @@ fn main() {
                             .cmd("safebooru",safebooru)
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
-                            
+    
+    client.
+    
     if let Err(why) = client.start() {
         println!("An error occured while running the client: {:?}", why);
     }
