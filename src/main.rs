@@ -7,55 +7,44 @@ extern crate rand;
 mod boorus;
 mod sadpanda;
 
-use serenity::client::Client;
-use serenity::client::Context;
-use serenity::model::prelude::Ready;
+use serenity::client::{Client, Context};
+use serenity::model::{channel::{Channel, Message}, gateway::{Ready, Activity}};
 use serenity::prelude::EventHandler;
-use serenity::framework::standard::StandardFramework;
+use serenity::framework::standard::{
+    StandardFramework,
+    Args, CheckResult, CommandOptions, CommandResult,
+    macros::{command, group, help},
+};
+
 use std::env;
 
 struct Handler;
 
 impl EventHandler for Handler {
     fn ready(&self, ctx: Context, _: Ready) {
-        ctx.edit_profile(|e| e.username("Mayumi"));
+        ctx.set_activity(Activity::playing("https://www.youtube.com/watch?v=r3j1IhPRFs0"));
         
     }
 }
 
-fn main() {
+#[group]
+#[commands(help, danbooru, gelbooru, safebooru, weiss, weiss2, midori, bog, eve, saiyn, bang, emote, tags, bigsmug, chocola2, vanilla2, mikasweat)]
+struct Cmd;
 
+fn main() {
     let mut client = Client::new(&env::var("DISCORD_TOKEN").expect("token"), Handler)
         .expect("Error creating client");
     client.with_framework(StandardFramework::new()
                             .configure(|c| c.prefix("~"))
-                            .cmd("help", help)
-                            .cmd("weiss", weiss)
-                            .cmd("weiss2", weiss2)
-                            .cmd("midori", midori)
-                            .cmd("eve", eve)
-                            .cmd("saiyn", saiyn)
-                            .cmd("bog", bog)
-                            .cmd("bang", bang)
-                            .cmd("emote", emote)
-                            .cmd("emoji", emote)
-                            .cmd("bigsmug", bigsmug)
-                            .cmd("chocola2", chocola2)
-                            .cmd("vanilla2", vanilla2)
-                            .cmd("mikasweat", mikasweat)
-                            .cmd("tags", tags)
-                            .cmd("safebooru",safebooru)
-                            .cmd("danbooru",danbooru)
-                            .cmd("gelbooru", gelbooru));
-    
+                            .group(&CMD_GROUP));
     
     if let Err(why) = client.start() {
         println!("An error occured while running the client: {:?}", why);
     }
 }
-
-command!(help(_context, message) {
-    let _ = message.channel_id.say("```Current list of commands:\n\t
+#[command]
+fn help(ctx: &mut Context, message: &Message) -> CommandResult {
+    let _ = message.channel_id.say(&ctx.http,"```Current list of commands:\n\t
 ~emote/~emoji: Display embed image for specified emoji\n\t
 ~tags: displays embed information for a sadpanda link\n\t
 
@@ -73,18 +62,13 @@ Booru commands (WARNING NSFW):\n\t
 
 
 \n\t```");
+
+    Ok(())
                     
-});
+}
 
-command!(husbando(_context, message) {
-    let _ = message.channel_id.say("Midori is my husbando!");
-});
-
-command!(slut(_context, message) {
-    let _ = message.reply("I am not a slut!");
-});
-
-command!(danbooru(_context, message, args) {
+#[command]
+fn danbooru(ctx: &mut Context, message: &Message, args: Args) -> CommandResult {
 
     let tag = boorus::boorus::parse_args(args, 2);
 
@@ -93,10 +77,13 @@ command!(danbooru(_context, message, args) {
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
-    let _ = message.channel_id.say(link);
-});
+    let _ = message.channel_id.say(&ctx.http,link);
+    
+    Ok(())
+}
 
-command!(safebooru(_context, message, args) {
+#[command]
+fn safebooru(ctx: &mut Context, message: &Message, args: Args) -> CommandResult {
     let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
@@ -105,13 +92,15 @@ command!(safebooru(_context, message, args) {
     };
 
     let url = format!("https:{}",url);
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(url)));
+    Ok(())
+}
 
-});
+#[command]
 
-command!(gelbooru(_context, message, args) {
+fn gelbooru(ctx: &mut Context, message: &Message, args: Args) -> CommandResult {
     let tag = boorus::boorus::parse_args(args, 100);
     
     let (link, url) = match tag {
@@ -119,74 +108,100 @@ command!(gelbooru(_context, message, args) {
         None => (String::from("Invalid amount of tags, only 1-2 can be used"), String::from("Invalid")),
     };
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
+    Ok(())
+}
 
-});
 
-command!(weiss(_context, message) {
+#[command]
+fn weiss(ctx: &mut Context, message: &Message) -> CommandResult {
     let tag = String::from("dark_skin+white_hair+-comic+-guro+-furry+-dark_skinned_male+-male_focus");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
-});
+    Ok(())
+}
 
-command!(weiss2(_context, message) {
+#[command]
+fn weiss2(ctx: &mut Context, message: &Message) -> CommandResult {
     let tag = String::from("dark_skin+soles+feet+-comic+-guro+-dark_skinned_male+-furry+-male_focus");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
-});
+                       
+    Ok(())
+}
 
-command!(midori(_context, message) {
+#[command]
+fn midori(ctx: &mut Context, message: &Message) -> CommandResult {
     let tag = String::from("miko+armpits+arms_up+-comic+-furry+-male_focus");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
-});
+                       
+    Ok(())
+}
 
-command!(eve(_context, message) {
+#[command]
+fn eve(ctx: &mut Context, message: &Message) -> CommandResult {
     let tag = String::from("makoto_nanaya");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 5);
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
-});
+                       
+    Ok(())
+}
 
 
-command!(saiyn(_context, message) {
+
+#[command]
+fn saiyn(ctx: &mut Context, message: &Message) -> CommandResult {
     let tag = String::from("loli+tan");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
-});
+                       
+    Ok(())
+}
 
    
-command!(bog(_context, message) {
+
+#[command]
+fn bog(ctx: &mut Context, message: &Message) -> CommandResult {
     let tag = String::from("loli+smug");
     let (link, url) = boorus::boorus::get_booru_link("gelbooru.com", tag, 500);
 
-    let _ = message.channel_id.send_message(|m| m.content(link.as_str())
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(link.as_str())
                 .embed(|e| e
                        .image(&url)));
-});
 
-command!(bang(_context, message) {
-    let _ = message.channel_id.send_message(|m| m.content("BANG BANG BANG https://www.youtube.com/watch?v=iUVDHEGR31k"));
+    Ok(())
+}
+
+
+#[command]
+fn bang(ctx: &mut Context, message: &Message) -> CommandResult {
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content("BANG BANG BANG https://www.youtube.com/watch?v=iUVDHEGR31k"));
     
-});
+    Ok(())
+}
 
-command!(emote(_context, message, args) {
+
+#[command]
+#[aliases("emoji")]
+fn emote(ctx: &mut Context, message: &Message, mut args: Args) -> CommandResult {
     let emoji_name = args.single::<String>().unwrap();
     let emoji_name = String::from(&emoji_name[2..emoji_name.len()-1]);
     let split_emoji : Vec<&str> = emoji_name.split(":").collect();
@@ -198,41 +213,61 @@ command!(emote(_context, message, args) {
     };
 
     if split_emoji.len() < 2 {
-        let _ = message.channel_id.say("Bad input");
+        let _ = message.channel_id.say(&ctx.http,"Bad input");
     } else {
 
         let url = format!("https://cdn.discordapp.com/emojis/{}.{}", emoji_id, filetype);
-        let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
+        let _ = message.channel_id.send_message(&ctx.http, |m| m.embed(|e| e.image(&url)));
     }
 
-});
-command!(tags(_context, message, args) {
+    Ok(())
+}
+
+#[command]
+fn tags(ctx: &mut Context, message: &Message, mut args: Args) -> CommandResult {
     let url = args.single::<String>().unwrap();
     let (doujin_title, image_url, doujin_tags) = sadpanda::sadpanda::retrieve_tags(url);    
     let doujin_title = String::from(&doujin_title[1..doujin_title.len()-1]);
     let image_url = String::from(&image_url[1..image_url.len()-1]);
-    let _ = message.channel_id.send_message(|m| m.content(doujin_title)
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.content(doujin_title)
                                                 .embed(|e| e.image(&image_url).description(doujin_tags)));
-});
 
-command!(bigsmug(_context, message) {
+    Ok(())
+}
+
+
+#[command]
+fn bigsmug(ctx: &mut Context, message: &Message) -> CommandResult {
     let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318574343094273/extremelybigsmug4.png";
-    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.embed(|e| e.image(&url)));
     
-});
+    Ok(())
+}
 
 
-command!(chocola2(_context, message) {
+
+#[command]
+fn chocola2(ctx: &mut Context, message: &Message) -> CommandResult {
     let url = "https://cdn.discordapp.com/attachments/123165694429888514/520318130522685470/extremelybigchocola2.png";
-    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
-});
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.embed(|e| e.image(&url)));
+    
+    Ok(())
+}
 
-command!(vanilla2(_context, message) {
+
+#[command]
+fn vanilla2(ctx: &mut Context, message: &Message) -> CommandResult {
     let url = "https://media.discordapp.net/attachments/123165694429888514/556235851747819522/extremelybigvanilla2.png";
-    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
-});
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.embed(|e| e.image(&url)));
+    
+    Ok(())
+}
 
-command!(mikasweat(_context, message) {
+
+#[command]
+fn mikasweat(ctx: &mut Context, message: &Message) -> CommandResult {
     let url = "https://cdn.discordapp.com/attachments/123165694429888514/542484609967980565/DisOUS0UwAALPh-.png";
-    let _ = message.channel_id.send_message(|m| m.embed(|e| e.image(&url)));
-});
+    let _ = message.channel_id.send_message(&ctx.http, |m| m.embed(|e| e.image(&url)));
+    
+    Ok(())
+}
