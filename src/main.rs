@@ -8,6 +8,8 @@ mod boorus;
 mod sadpanda;
 
 use serenity::client::Client;
+use serenity::client::Context;
+use serenity::model::prelude::Ready;
 use serenity::prelude::EventHandler;
 use serenity::framework::standard::StandardFramework;
 use std::env;
