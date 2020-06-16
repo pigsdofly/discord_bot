@@ -46,7 +46,6 @@ fn main() {
                             .cmd("danbooru",danbooru)
                             .cmd("gelbooru", gelbooru));
     
-    client.
     
     if let Err(why) = client.start() {
         println!("An error occured while running the client: {:?}", why);
