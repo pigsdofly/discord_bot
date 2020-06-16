@@ -1,9 +1,5 @@
-use serde_json;
-use reqwest;
 pub mod sadpanda {
 /* Module for returning tags and cover art from a certain website. */
-    use curl::easy::Easy;
-    use std::collections::HashMap;
     use reqwest::header::{HeaderMap, HeaderValue, CONTENT_TYPE};
     use serde_json::{Value};
     
@@ -18,14 +14,14 @@ pub mod sadpanda {
         let tags_raw = result["gmetadata"][0]["tags"].as_array().unwrap();
         let mut tags : String = String::new();
         let mut previous : String = String::new();
-        let mut first : String = String::new();
+        let mut first : String;
         for t in tags_raw {
             //take tag, check first word
 
             let string_t = t.to_string();
             let split_t = string_t.split(':');
-            let mut split_tag = split_t.collect::<Vec<&str>>(); 
-            let mut tag = String::new();
+            let split_tag = split_t.collect::<Vec<&str>>(); 
+            let tag: String;
             if split_tag.len() == 1 {
                 first = String::from("\"misc");
                 tag = String::from(&split_tag[0][1..]);
@@ -33,7 +29,7 @@ pub mod sadpanda {
                 first = String::from(split_tag[0]);
                 tag = split_tag[1].to_string();
             }
-            let mut first_char : String = String::new();
+            let first_char : String;
             if first != previous {
                 let temp = format!("\n{}: ", String::from(&first[1..]));
                 tags.push_str(&temp);
